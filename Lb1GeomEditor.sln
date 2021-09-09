@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lb1GeomEditor", "Lb1GeomEditor\Lb1GeomEditor.csproj", "{CD4B1AF3-1437-4072-81A9-32A91EC45041}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD4B1AF3-1437-4072-81A9-32A91EC45041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD4B1AF3-1437-4072-81A9-32A91EC45041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD4B1AF3-1437-4072-81A9-32A91EC45041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD4B1AF3-1437-4072-81A9-32A91EC45041}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DEF15A37-782F-4766-92A5-2508406F6F9F}
+	EndGlobalSection
+EndGlobal
