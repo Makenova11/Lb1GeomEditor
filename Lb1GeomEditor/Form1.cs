@@ -82,6 +82,16 @@ namespace Lb1GeomEditor
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             state = 1;
+            PolylineRadioButton.Visible = false;
+
+            //убираем видимость ненужных элементов
+            BezyeRadioButton.Visible = true;
+            PolylineRadioButton.Visible = false;
+            PolygonradioButton.Visible = false;
+            panel2.Visible = false;
+            label2.Visible = false;
+            ContourButton.Visible = false;
+            CounturetrackBar.Visible = false;
         }
 
         /// <summary>
@@ -99,7 +109,6 @@ namespace Lb1GeomEditor
             statusStrip1.Text = "Изображение сохранено";
 
             pictureBox1.Image = Image.FromFile("image.png");
-            
             
         }
 
@@ -127,6 +136,8 @@ namespace Lb1GeomEditor
         {
             state = 2;
             PolylineRadioButton.Visible = true;
+            BezyeRadioButton.Visible = false;
+            BezyeRadioButton.Checked = false;
         }
 
         /// <summary>
@@ -140,6 +151,7 @@ namespace Lb1GeomEditor
             PolylineRadioButton.Visible = false;
 
             g.DrawLines(pen, PolyLinePoints.ToArray());
+            g.Save();
             pictureBox1.Refresh();
         }
 
@@ -230,9 +242,15 @@ namespace Lb1GeomEditor
         private void BezyeButtom_CheckedChanged(object sender, EventArgs e)
         {
             state = 3;
+
+            //убираем видимость ненужных элементов
             BezyeRadioButton.Visible = true;
             PolylineRadioButton.Visible = false;
-
+            PolygonradioButton.Visible = false;
+            panel2.Visible = false;
+            label2.Visible = false;
+            ContourButton.Visible = false;
+            CounturetrackBar.Visible = false;
         }
 
         /// <summary>
@@ -311,7 +329,6 @@ namespace Lb1GeomEditor
             pictureBox1.Refresh();
         }
 
-
         /// <summary>
         /// Инициализация прямоугольника
         /// </summary>
@@ -323,7 +340,7 @@ namespace Lb1GeomEditor
             panel2.Visible = true;
             rectanButton.Enabled = false;
             ContourButton.Visible = true;
-            PolygonradioButton.Visible = true;
+            PolygonradioButton.Visible = false;
             CounturetrackBar.Visible = true;
             label2.Visible = true;
         }
@@ -335,7 +352,7 @@ namespace Lb1GeomEditor
         /// <param name="e"></param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (textBox1 is not null && textBox2 is not null)
+            if (textBox1 is not null & textBox2 is not null)
             {
                 rectanButton.Enabled = true;
             }
@@ -348,7 +365,7 @@ namespace Lb1GeomEditor
         /// <param name="e"></param>
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            if (textBox1 is not null && textBox2 is not null)
+            if (textBox1 is not null & textBox2 is not null)
             {
                 rectanButton.Enabled = true;
             }
@@ -361,7 +378,21 @@ namespace Lb1GeomEditor
         /// <param name="e"></param>
         private void rectanButton_Click(object sender, EventArgs e)
         {
+            int height = Convert.ToInt32(textBox1.Text);
+            int widht = Convert.ToInt32(textBox2.Text);
+            Rectangle rectangle = new Rectangle(rectanglePoint, new Size(widht,height));
+            g.DrawRectangle(penConture,rectangle);
+            g.FillRectangle(brush,rectangle);
 
+            g.Save();
+            pictureBox1.Refresh();
+
+            //убираем видимость панели инструментов для прямоугольника
+            panel2.Visible = false;
+            ContourButton.Visible = false;
+            PolygonradioButton.Visible = false;
+            CounturetrackBar.Visible = false;
+            label2.Visible = false;
         }
     }
 }

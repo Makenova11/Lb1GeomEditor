@@ -85,11 +85,11 @@ namespace Lb1GeomEditor
             // 
             // ColourButton
             // 
-            this.ColourButton.Location = new System.Drawing.Point(29, 25);
+            this.ColourButton.Location = new System.Drawing.Point(20, 25);
             this.ColourButton.Name = "ColourButton";
-            this.ColourButton.Size = new System.Drawing.Size(94, 29);
+            this.ColourButton.Size = new System.Drawing.Size(116, 29);
             this.ColourButton.TabIndex = 1;
-            this.ColourButton.Text = "Цвет";
+            this.ColourButton.Text = "Цвет заливки";
             this.ColourButton.UseVisualStyleBackColor = true;
             this.ColourButton.Click += new System.EventHandler(this.button1_Click);
             // 
