@@ -38,15 +38,29 @@ namespace Lb1GeomEditor
 
         //Полилиния
         private List<Point> PolyLinePoints = new List<Point>();
+        private int statePolyline = 0;
 
         //Кривая Безье
         private List<Point> besyePoints = new List<Point>();
+        private int statebezye = 0;
 
         //Полигон
         private List<Point> polyGonPoints = new List<Point>();
+        private int statepolygon = 0; //для обработки исключения
 
         //Прямоугольник. Опорная точка
         private Point rectanglePoint = new Point();
+
+        //Круг, эллипс
+        private Point CirclePoint = new Point();
+        private bool isMouseDown = false;
+        private Pen ellipsePen = new Pen(Color.Black);
+        private Brush ellipse = new SolidBrush(Color.Black);
+
+        //Текст
+        private Point point = new Point();
+        private Font font;
+
 
         //Описание состояний state 
         // 1 - выбрана линия, программа считывает значение начальной точки
@@ -56,6 +70,9 @@ namespace Lb1GeomEditor
         // 3  - выбрана кривая безье
         // 4 - полигон
         // 5 - прямоугольник
+        // 6 - круг
+        // 7 - эллипс
+        // 8 - текстовый блок
 
         /// <summary>
         /// Выбор цвета для рисования
@@ -70,6 +87,7 @@ namespace Lb1GeomEditor
                 label1.ForeColor = color;
                 pen.Color = color;
                 brush = new SolidBrush(color);
+                ellipse = new SolidBrush(color);
             }
         }
 
@@ -85,13 +103,14 @@ namespace Lb1GeomEditor
             PolylineRadioButton.Visible = false;
 
             //убираем видимость ненужных элементов
-            BezyeRadioButton.Visible = true;
+            BezyeRadioButton.Visible = false;
             PolylineRadioButton.Visible = false;
             PolygonradioButton.Visible = false;
             panel2.Visible = false;
             label2.Visible = false;
             ContourButton.Visible = false;
             CounturetrackBar.Visible = false;
+            CirclePanel.Visible = false;
         }
 
         /// <summary>
@@ -106,9 +125,11 @@ namespace Lb1GeomEditor
 
             bpm.Save("image.png",ImageFormat.Png);
 
+
             statusStrip1.Text = "Изображение сохранено";
 
             pictureBox1.Image = Image.FromFile("image.png");
+            pictureBox1.Refresh();
             
         }
 
@@ -135,9 +156,11 @@ namespace Lb1GeomEditor
         private void PolyLineButton_CheckedChanged(object sender, EventArgs e)
         {
             state = 2;
+            statePolyline = 0;
             PolylineRadioButton.Visible = true;
             BezyeRadioButton.Visible = false;
             BezyeRadioButton.Checked = false;
+            CirclePanel.Visible = false;
         }
 
         /// <summary>
@@ -149,10 +172,20 @@ namespace Lb1GeomEditor
         {
             //после отрисовки полилинии radiobutton исчезает
             PolylineRadioButton.Visible = false;
-
-            g.DrawLines(pen, PolyLinePoints.ToArray());
-            g.Save();
-            pictureBox1.Refresh();
+            PolylineRadioButton.Checked = false;
+            PolyLineButton.Checked = false;
+            if (statePolyline == 0)
+            {
+                
+                g.DrawLines(pen, PolyLinePoints.ToArray());
+                g.Save();
+                pictureBox1.Refresh();
+                PolyLinePoints.Clear();
+                
+                polyGonPoints = new List<Point>();
+                statePolyline = 1;
+            }
+            
         }
 
         /// <summary>
@@ -164,12 +197,14 @@ namespace Lb1GeomEditor
         {
             if (bitmapState == 0)
             {
+
                 //Создаём Image внутри pictureBox
                 bpm = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
                 ////Создаём объект graphics для рисования на bitmap
                 g = Graphics.FromImage(bpm);
 
+                g.Clear(Color.White);
                 pictureBox1.Image = bpm;
                 bitmapState++;
             }
@@ -197,10 +232,12 @@ namespace Lb1GeomEditor
             }
             else if (state == 2) //polyline
             {
+
                 PolyLinePoints.Add(new Point(e.X, e.Y));
             }
             else if (state == 3) // besyeline
             {
+                
                 besyePoints.Add(new Point(e.X, e.Y));
             }
             else if (state == 4)//polygon
@@ -210,6 +247,15 @@ namespace Lb1GeomEditor
             else if (state == 5)//rectangle
             {
                 rectanglePoint = new Point(e.X, e.Y);
+            }
+            else if (state == 6 || state == 7)//circle, ellipse
+            {
+                CirclePoint = new Point(e.X, e.Y);
+                isMouseDown = true;
+            }
+            else if (state == 8)//txtBlock
+            {
+                point = new Point(e.X, e.Y);
             }
 
         }
@@ -228,6 +274,10 @@ namespace Lb1GeomEditor
                 g.DrawLine(pen, startPoint, endPoint);
                 statusStrip1.Text = "Линия нарисована";
             }
+            else if (state == 7)
+            {
+                isMouseDown = false;
+            }
 
             g.Save();
             pictureBox1.Refresh();
@@ -242,7 +292,7 @@ namespace Lb1GeomEditor
         private void BezyeButtom_CheckedChanged(object sender, EventArgs e)
         {
             state = 3;
-
+            statebezye = 0;
             //убираем видимость ненужных элементов
             BezyeRadioButton.Visible = true;
             PolylineRadioButton.Visible = false;
@@ -251,6 +301,7 @@ namespace Lb1GeomEditor
             label2.Visible = false;
             ContourButton.Visible = false;
             CounturetrackBar.Visible = false;
+            CirclePanel.Visible = false;
         }
 
         /// <summary>
@@ -260,10 +311,16 @@ namespace Lb1GeomEditor
         /// <param name="e"></param>
         private void BezyeRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            g.DrawBezier(pen,besyePoints[0],besyePoints[1],besyePoints[2],besyePoints[3]);
-            g.Save();
-            pictureBox1.Refresh();
-            BezyeRadioButton.Visible = false;
+            if (statebezye == 0)
+            {
+                g.DrawBezier(pen, besyePoints[0], besyePoints[1], besyePoints[2], besyePoints[3]);
+                g.Save();
+                pictureBox1.Refresh();
+                BezyeRadioButton.Visible = false;
+                BezyeRadioButton.Checked = false;
+                besyePoints = new List<Point>();
+                statebezye = 1;
+            }
         }
 
         /// <summary>
@@ -274,10 +331,12 @@ namespace Lb1GeomEditor
         private void Polygon_CheckedChanged(object sender, EventArgs e)
         {
             state = 4;
+            statepolygon = 0 ;
             ContourButton.Visible = true;
             PolygonradioButton.Visible = true;
             CounturetrackBar.Visible = true;
             label2.Visible = true;
+            CirclePanel.Visible = false;
         }
 
         /// <summary>
@@ -292,6 +351,8 @@ namespace Lb1GeomEditor
                 Color color = colorDialog1.Color;
                 label2.ForeColor = color;
                 penConture.Color = color;
+                ellipsePen = new Pen(color);
+                //brush = new SolidBrush(color);
             }
         }
 
@@ -323,10 +384,16 @@ namespace Lb1GeomEditor
             CounturetrackBar.Visible = false;
             label2.Visible = false;
 
-            g.FillPolygon(brush, polyGonPoints.ToArray());
-            g.DrawPolygon(penConture, polyGonPoints.ToArray());
-            g.Save();
-            pictureBox1.Refresh();
+            if (statepolygon == 0)
+            {
+                g.FillPolygon(brush, polyGonPoints.ToArray());
+                g.DrawPolygon(penConture, polyGonPoints.ToArray());
+                g.Save();
+                pictureBox1.Refresh();
+                polyGonPoints.Clear();
+                
+                statepolygon = 1;
+            }
         }
 
         /// <summary>
@@ -343,6 +410,7 @@ namespace Lb1GeomEditor
             PolygonradioButton.Visible = false;
             CounturetrackBar.Visible = true;
             label2.Visible = true;
+            CirclePanel.Visible = false;
         }
 
         /// <summary>
@@ -372,18 +440,38 @@ namespace Lb1GeomEditor
         }
 
         /// <summary>
-        /// Отрисовка прямоугольника
+        /// Отрисовка прямоугольника/эллипса
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void rectanButton_Click(object sender, EventArgs e)
         {
-            int height = Convert.ToInt32(textBox1.Text);
-            int widht = Convert.ToInt32(textBox2.Text);
-            Rectangle rectangle = new Rectangle(rectanglePoint, new Size(widht,height));
-            g.DrawRectangle(penConture,rectangle);
-            g.FillRectangle(brush,rectangle);
+            if (state == 5)
+            {
+                int height = Convert.ToInt32(textBox1.Text);
+                int widht = Convert.ToInt32(textBox2.Text);
+                Rectangle rectangle = new Rectangle(rectanglePoint, new Size(widht, height));
+                
+                g.DrawRectangle(penConture, rectangle);
+                g.FillRectangle(brush, rectangle);
+                g.Save();
+                pictureBox1.Refresh();
+            }
+            else if (state == 7)
+            {
+                int height = Convert.ToInt32(textBox1.Text);
+                int width = Convert.ToInt32(textBox2.Text);
+                Size size = new Size(width, height);
+                CirclePoint.X -= width / 2;
+                CirclePoint.Y -= height / 2;
+                Rectangle rectangle = new Rectangle(CirclePoint, size);
 
+                g.DrawEllipse(ellipsePen, rectangle);
+                
+                g.FillEllipse(ellipse, rectangle);
+                g.Save();
+                pictureBox1.Refresh();
+            }
             g.Save();
             pictureBox1.Refresh();
 
@@ -393,6 +481,207 @@ namespace Lb1GeomEditor
             PolygonradioButton.Visible = false;
             CounturetrackBar.Visible = false;
             label2.Visible = false;
+            CirclePanel.Visible = false;
+        }
+
+        /// <summary>
+        /// Открытие изображения
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            OpenFileDialog open_dialog = new OpenFileDialog(); //создание диалогового окна для выбора файла
+            if (open_dialog.ShowDialog() == DialogResult.OK) //если в окне была нажата кнопка "ОК"
+            {
+                try
+                {
+                    bpm = new Bitmap(open_dialog.FileName);
+                    this.pictureBox1.Size = bpm.Size;
+                    pictureBox1.Image = bpm;
+                    g = Graphics.FromImage(bpm);
+                    g.Save();
+                    pictureBox1.Refresh();
+                    pictureBox1.Invalidate();
+                }
+                catch
+                {
+                    DialogResult rezult = MessageBox.Show("Невозможно открыть выбранный файл",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Инициализация круга
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CircleButton_CheckedChanged(object sender, EventArgs e)
+        {
+            state = 6;
+            CirclePanel.Visible = true;
+
+            //убираем видимость ненужных элементов
+            BezyeRadioButton.Visible = false;
+            PolylineRadioButton.Visible = false;
+            PolygonradioButton.Visible = false;
+
+            panel2.Visible = false;
+            label2.Visible = true;
+            ContourButton.Visible = true;
+            CounturetrackBar.Visible = true;
+        }
+
+        /// <summary>
+        /// Отрисовка круга
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button3_Click(object sender, EventArgs e)
+        {
+            int radius = Convert.ToInt32(textBox3.Text);
+            Size size = new Size(radius, radius);
+            CirclePoint.X -= radius / 2;
+            CirclePoint.Y -= radius / 2;
+            Rectangle rectangle = new Rectangle(CirclePoint, size);
+            g.DrawEllipse(pen, rectangle);
+            g.FillEllipse(brush,rectangle);
+
+            g.Save();
+            pictureBox1.Refresh();
+            
+            //Убираем видимость
+            panel2.Visible = false;
+            ContourButton.Visible = false;
+            PolygonradioButton.Visible = false;
+            CounturetrackBar.Visible = false;
+            label2.Visible = false;
+            CirclePanel.Visible = false;
+            BezyeRadioButton.Visible = false;
+            PolylineRadioButton.Visible = false;
+            PolygonradioButton.Visible = false;
+        }
+
+        /// <summary>
+        /// Инициализация эллипса
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EllipsButton_CheckedChanged(object sender, EventArgs e)
+        {
+            state = 7;
+
+            BezyeRadioButton.Visible = false;
+            PolylineRadioButton.Visible = false;
+            PolygonradioButton.Visible = false;
+            panel2.Visible = true;
+            rectanButton.Enabled = false;
+            ContourButton.Visible = true;
+            CounturetrackBar.Visible = true;
+            label2.Visible = true;
+            CirclePanel.Visible = false;
+        }
+
+        /// <summary>
+        /// Инициализация текстового блока
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextButton_CheckedChanged(object sender, EventArgs e)
+        {
+            state = 8;
+            FontBtn.Visible = true;
+            CreateTXT.Enabled = false;
+            txtPanel.Visible = true;
+
+            label2.Visible = true;
+            CounturetrackBar.Visible = true;
+            ContourButton.Visible = true;
+        }
+
+        /// <summary>
+        /// Выбор шрифта, его размера
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FontBtn_Click(object sender, EventArgs e)
+        {
+            if (fontDialog1.ShowDialog() == DialogResult.OK)
+            {
+                font = new Font(fontDialog1.Font.FontFamily, fontDialog1.Font.Size);
+            }
+            
+        }
+        /// <summary>
+        /// Отрисовка текста
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CreateTXT_Click(object sender, EventArgs e)
+        {
+            g.DrawString(textBox4.Text,font, brush, point);
+            g.Save();
+            pictureBox1.Refresh();
+
+            label2.Visible = false;
+            CounturetrackBar.Visible = false;
+            ContourButton.Visible = false;
+        }
+
+        /// <summary>
+        /// Проверка условия на пустое поле
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox4 != null)
+            {
+                CreateTXT.Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// CОХРАНЕНИЕ SVG
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //Переносим рисунок в созданный Image
+            pictureBox1.DrawToBitmap(bpm, pictureBox1.ClientRectangle);
+           
+            bpm.Save("imageSVG.wmf", ImageFormat.Wmf);
+
+            statusStrip1.Text = "Изображение сохранено";
+
+
+        }
+
+
+        /// <summary>
+        /// Создание массовых эллипсов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+
+            if (state == 7 && isMouseDown == true)
+            {
+                int height = Convert.ToInt32(textBox1.Text);
+                int width = Convert.ToInt32(textBox2.Text);
+                Size size = new Size(width, height);
+                CirclePoint.X -= width / 2;
+                CirclePoint.Y -= height / 2;
+                Rectangle rectangle = new Rectangle(new Point(e.X, e.Y), size);
+                g.DrawEllipse(pen, rectangle);
+                System.Threading.Thread.Sleep(100);
+                //g.FillEllipse(ellipse, rectangle);
+                g.Save();
+                pictureBox1.Refresh();
+            }
         }
     }
 }

@@ -42,6 +42,14 @@ namespace Lb1GeomEditor
             this.EllipsButton = new System.Windows.Forms.RadioButton();
             this.TextButton = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtPanel = new System.Windows.Forms.Panel();
+            this.CreateTXT = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.FontBtn = new System.Windows.Forms.Button();
+            this.CirclePanel = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.BezyeRadioButton = new System.Windows.Forms.RadioButton();
             this.SaveButton = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -60,8 +68,14 @@ namespace Lb1GeomEditor
             this.ContourButton = new System.Windows.Forms.Button();
             this.CounturetrackBar = new System.Windows.Forms.TrackBar();
             this.label2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.fontDialog1 = new System.Windows.Forms.FontDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.txtPanel.SuspendLayout();
+            this.CirclePanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel1.SuspendLayout();
@@ -74,7 +88,7 @@ namespace Lb1GeomEditor
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(441, 29);
+            this.pictureBox1.Location = new System.Drawing.Point(429, 30);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(767, 450);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -82,10 +96,11 @@ namespace Lb1GeomEditor
             this.pictureBox1.TabStop = false;
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
+            this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             // 
             // ColourButton
             // 
-            this.ColourButton.Location = new System.Drawing.Point(20, 25);
+            this.ColourButton.Location = new System.Drawing.Point(35, 74);
             this.ColourButton.Name = "ColourButton";
             this.ColourButton.Size = new System.Drawing.Size(116, 29);
             this.ColourButton.TabIndex = 1;
@@ -96,7 +111,7 @@ namespace Lb1GeomEditor
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(142, 29);
+            this.label1.Location = new System.Drawing.Point(157, 78);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 20);
             this.label1.TabIndex = 2;
@@ -172,6 +187,7 @@ namespace Lb1GeomEditor
             this.CircleButton.TabStop = true;
             this.CircleButton.Text = "Круг";
             this.CircleButton.UseVisualStyleBackColor = true;
+            this.CircleButton.CheckedChanged += new System.EventHandler(this.CircleButton_CheckedChanged);
             // 
             // EllipsButton
             // 
@@ -183,6 +199,7 @@ namespace Lb1GeomEditor
             this.EllipsButton.TabStop = true;
             this.EllipsButton.Text = "Эллипс";
             this.EllipsButton.UseVisualStyleBackColor = true;
+            this.EllipsButton.CheckedChanged += new System.EventHandler(this.EllipsButton_CheckedChanged);
             // 
             // TextButton
             // 
@@ -194,9 +211,11 @@ namespace Lb1GeomEditor
             this.TextButton.TabStop = true;
             this.TextButton.Text = "Текст";
             this.TextButton.UseVisualStyleBackColor = true;
+            this.TextButton.CheckedChanged += new System.EventHandler(this.TextButton_CheckedChanged);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txtPanel);
             this.groupBox1.Controls.Add(this.LineButton);
             this.groupBox1.Controls.Add(this.PolyLineButton);
             this.groupBox1.Controls.Add(this.BezyeButtom);
@@ -207,9 +226,86 @@ namespace Lb1GeomEditor
             this.groupBox1.Controls.Add(this.CircleButton);
             this.groupBox1.Location = new System.Drawing.Point(2, 34);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(212, 273);
+            this.groupBox1.Size = new System.Drawing.Size(394, 293);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
+            //this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // txtPanel
+            // 
+            this.txtPanel.Controls.Add(this.CreateTXT);
+            this.txtPanel.Controls.Add(this.textBox4);
+            this.txtPanel.Location = new System.Drawing.Point(157, 254);
+            this.txtPanel.Name = "txtPanel";
+            this.txtPanel.Size = new System.Drawing.Size(234, 39);
+            this.txtPanel.TabIndex = 11;
+            this.txtPanel.Visible = false;
+            // 
+            // CreateTXT
+            // 
+            this.CreateTXT.Location = new System.Drawing.Point(3, 4);
+            this.CreateTXT.Name = "CreateTXT";
+            this.CreateTXT.Size = new System.Drawing.Size(94, 29);
+            this.CreateTXT.TabIndex = 13;
+            this.CreateTXT.Text = "Создать";
+            this.CreateTXT.UseVisualStyleBackColor = true;
+            this.CreateTXT.Click += new System.EventHandler(this.CreateTXT_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(101, 4);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(125, 27);
+            this.textBox4.TabIndex = 12;
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            // 
+            // FontBtn
+            // 
+            this.FontBtn.Location = new System.Drawing.Point(35, 39);
+            this.FontBtn.Name = "FontBtn";
+            this.FontBtn.Size = new System.Drawing.Size(116, 29);
+            this.FontBtn.TabIndex = 11;
+            this.FontBtn.Text = "Шрифт";
+            this.FontBtn.UseVisualStyleBackColor = true;
+            this.FontBtn.Visible = false;
+            this.FontBtn.Click += new System.EventHandler(this.FontBtn_Click);
+            // 
+            // CirclePanel
+            // 
+            this.CirclePanel.Controls.Add(this.label5);
+            this.CirclePanel.Controls.Add(this.button3);
+            this.CirclePanel.Controls.Add(this.textBox3);
+            this.CirclePanel.Location = new System.Drawing.Point(234, 148);
+            this.CirclePanel.Name = "CirclePanel";
+            this.CirclePanel.Size = new System.Drawing.Size(113, 97);
+            this.CirclePanel.TabIndex = 21;
+            this.CirclePanel.Visible = false;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(22, 4);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(56, 20);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Радиус";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(4, 60);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(103, 29);
+            this.button3.TabIndex = 2;
+            this.button3.Text = "Нарисовать";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(22, 27);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(58, 27);
+            this.textBox3.TabIndex = 0;
             // 
             // BezyeRadioButton
             // 
@@ -226,11 +322,11 @@ namespace Lb1GeomEditor
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(223, 25);
+            this.SaveButton.Location = new System.Drawing.Point(223, 39);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(138, 29);
             this.SaveButton.TabIndex = 13;
-            this.SaveButton.Text = "Сохранить";
+            this.SaveButton.Text = "Сохранить png";
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
@@ -239,21 +335,21 @@ namespace Lb1GeomEditor
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 478);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 481);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1220, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1220, 23);
             this.statusStrip1.TabIndex = 14;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(83, 20);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(71, 17);
             this.toolStripStatusLabel1.Text = "Состояние";
             // 
             // trackBar1
             // 
-            this.trackBar1.Location = new System.Drawing.Point(29, 74);
+            this.trackBar1.Location = new System.Drawing.Point(44, 123);
             this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(130, 56);
@@ -370,7 +466,7 @@ namespace Lb1GeomEditor
             // 
             // CounturetrackBar
             // 
-            this.CounturetrackBar.Location = new System.Drawing.Point(223, 120);
+            this.CounturetrackBar.Location = new System.Drawing.Point(223, 111);
             this.CounturetrackBar.Name = "CounturetrackBar";
             this.CounturetrackBar.Size = new System.Drawing.Size(138, 56);
             this.CounturetrackBar.TabIndex = 17;
@@ -387,11 +483,39 @@ namespace Lb1GeomEditor
             this.label2.Text = "Цвет";
             this.label2.Visible = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(35, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(116, 30);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "Открыть";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(223, 1);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(138, 32);
+            this.button2.TabIndex = 20;
+            this.button2.Text = "Сохранить svg";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1220, 504);
+            this.Controls.Add(this.CirclePanel);
+            this.Controls.Add(this.FontBtn);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.CounturetrackBar);
             this.Controls.Add(this.ContourButton);
@@ -403,10 +527,14 @@ namespace Lb1GeomEditor
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ColourButton);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Paint Makenova 8I8B";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.txtPanel.ResumeLayout(false);
+            this.txtPanel.PerformLayout();
+            this.CirclePanel.ResumeLayout(false);
+            this.CirclePanel.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
@@ -453,6 +581,18 @@ namespace Lb1GeomEditor
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Panel CirclePanel;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button FontBtn;
+        private System.Windows.Forms.FontDialog fontDialog1;
+        private System.Windows.Forms.Panel txtPanel;
+        private System.Windows.Forms.Button CreateTXT;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
 
